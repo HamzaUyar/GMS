@@ -6,10 +6,109 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Department {
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String    @unique
+  advisors   Advisor[]
+  students   Student[]
+  diplomas   Diploma[]   // Relation for N:1 from Diploma
+  certificates Certificate[] // Relation for N:1 from Certificate
+  graduationLists GraduationList[] // Relation for N:1 from GraduationList
+}
+
+model Advisor {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  type         String // Reverted back to String
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Restrict) // Default behavior, explicitly stated
+  students     Student[]
+
+  @@index([departmentId])
+}
+
+model Student {
+  id              Int             @id @default(autoincrement())
+  name            String
+  email           String          @unique
+  departmentId    Int
+  advisorId       Int
+  department      Department      @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  advisor         Advisor         @relation(fields: [advisorId], references: [id], onDelete: Restrict)
+  transcript      Transcript?
+  diplomas        Diploma[]
+  certificates    Certificate[]
+  graduationLists StudentOnGraduationList[]
+
+  @@index([departmentId])
+  @@index([advisorId])
+}
+
+model Transcript {
+  id                      Int     @id @default(autoincrement())
+  creditsCompleted        Int
+  compulsoryCoursesCompleted Int
+  ects                    Float
+  studentId               Int     @unique // Enforces one-to-one
+  student                 Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+model Diploma {
+  id           Int           @id @default(autoincrement())
+  issueDate    DateTime
+  studentId    Int
+  departmentId Int
+  student      Student       @relation(fields: [studentId], references: [id], onDelete: Cascade) // Cascade if Student deleted
+  department   Department    @relation(fields: [departmentId], references: [id], onDelete: Restrict) // Restrict if Department deleted
+  certificates Certificate[]
+
+  @@index([studentId])
+  @@index([departmentId])
+}
+
+model Certificate {
+  id           String   @id @default(cuid())
+  type         String
+  issueDate    DateTime
+  studentId    Int
+  departmentId Int
+  diplomaId    Int?
+  student      Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  diploma      Diploma?  @relation(fields: [diplomaId], references: [id], onDelete: SetNull)
+
+  @@index([studentId])
+  @@index([departmentId])
+  @@index([diplomaId])
+}
+
+model GraduationList {
+  id           Int        @id @default(autoincrement())
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  students     StudentOnGraduationList[]
+
+  @@index([departmentId])
+}
+
+// Explicit join table for Student <-> GraduationList Many-to-Many
+model StudentOnGraduationList {
+  studentId       Int
+  graduationListId Int
+  student         Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  graduationList  GraduationList @relation(fields: [graduationListId], references: [id], onDelete: Cascade)
+
+  @@id([studentId, graduationListId]) // Composite primary key
+  @@index([graduationListId])
 }
