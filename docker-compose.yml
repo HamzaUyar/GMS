@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://gms_user:gmsdb123@db:5432/gms_db
+      # Add other environment variables for your Next.js app here if needed
+    networks:
+      - gms_network
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: gms_db
+      POSTGRES_USER: gms_user
+      POSTGRES_PASSWORD: gmsdb123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432" # Expose PostgreSQL port to host if needed for direct access (optional)
+    networks:
+      - gms_network
+
+volumes:
+  postgres_data:
+
+networks:
+  gms_network:
+    driver: bridge 
