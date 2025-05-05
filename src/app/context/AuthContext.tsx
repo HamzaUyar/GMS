@@ -2,7 +2,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, UserRole } from '../types/user';
-import { getCurrentUser, getUserRole, logoutUser, loginUser } from '../services/authService';
+import { getCurrentUser, getUserRole, loginUser } from '../services/authService';
+import { handleLogout } from '../utils/logout';
 
 // Define the shape of our auth context
 interface AuthContextType {
@@ -71,12 +72,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  // Logout function
+  // Logout function - now uses the centralized logout utility
   const logout = () => {
-    logoutUser();
+    handleLogout(router);
     setUser(null);
     setUserRole(null);
-    router.push('/');
   };
 
   // Create our value object

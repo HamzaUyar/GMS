@@ -1,18 +1,19 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useAuth } from '../context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { handleLogout } from '../utils/logout';
 
 interface SidebarProps {
   activePage?: string;
 }
 
 export default function Sidebar({ activePage = 'home' }: SidebarProps) {
-  const { logout } = useAuth();
+  const router = useRouter();
 
-  // Handle logout with the auth context
-  const handleLogout = () => {
-    logout();
+  // Use the centralized logout utility
+  const onLogout = () => {
+    handleLogout(router);
   };
 
   return (
@@ -85,7 +86,7 @@ export default function Sidebar({ activePage = 'home' }: SidebarProps) {
       {/* Logout section - separated as requested */}
       <div className="border-t border-red-700 p-4">
         <button 
-          onClick={handleLogout}
+          onClick={onLogout}
           className="w-full flex items-center justify-center px-4 py-3 bg-red-950 text-white rounded-lg hover:bg-red-900 transition-colors"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

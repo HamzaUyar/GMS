@@ -118,18 +118,6 @@ export function storeUserData(userData: User, userType: UserRole): void {
 }
 
 /**
- * Log out current user
- */
-export function logoutUser(): void {
-  // Clear localStorage
-  localStorage.removeItem('user');
-  localStorage.removeItem('userType');
-  
-  // Clear cookies
-  Cookies.remove('auth-token', { path: '/' });
-}
-
-/**
  * Check if user is authenticated
  */
 export function isAuthenticated(): boolean {
