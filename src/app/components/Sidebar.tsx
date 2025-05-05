@@ -1,22 +1,18 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '../context/AuthContext';
 
 interface SidebarProps {
   activePage?: string;
 }
 
 export default function Sidebar({ activePage = 'home' }: SidebarProps) {
-  const router = useRouter();
+  const { logout } = useAuth();
 
-  // Handle logout
+  // Handle logout with the auth context
   const handleLogout = () => {
-    // Clear user data from localStorage
-    localStorage.removeItem('user');
-    localStorage.removeItem('userType');
-    // Redirect to login page
-    router.push('/');
+    logout();
   };
 
   return (
