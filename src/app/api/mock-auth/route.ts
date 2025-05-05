@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
 
 // --- Mock Data Provided by User ---
-// TODO: needs departmentId fix
 const mockData = {
   advisors: [
-    { "id": 1, "name": "Physics Advisor", "email": "advisor.physics@example.com", "type": "Professor", "departmentId": 1, "password": "password_advisor_1" },
+    { "id": 1, "name": "Physics Advisor", "email": "advisor.physics@example.com", "type": "Professor", "departmentId": 20, "password": "password_advisor_1" },
     { "id": 2, "name": "Photonics Advisor", "email": "advisor.photonics@example.com", "type": "Professor", "departmentId": 21, "password": "password_advisor_2" },
     { "id": 3, "name": "Chemistry Advisor", "email": "advisor.chemistry@example.com", "type": "Professor", "departmentId": 22, "password": "password_advisor_3" },
     { "id": 4, "name": "Mathematics Advisor", "email": "advisor.mathematics@example.com", "type": "Professor", "departmentId": 23, "password": "password_advisor_4" },

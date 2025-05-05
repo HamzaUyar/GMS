@@ -35,9 +35,6 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Install wait-for-it dependencies (bash and netcat-openbsd)
-RUN apk add --no-cache bash netcat-openbsd
-
 COPY --from=builder /app/public ./public
 
 # Set the correct permission for prerender cache
@@ -48,13 +45,6 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-
-
-# Copy entrypoint and wait script
-COPY --chown=nextjs:nodejs wait-for-it.sh ./wait-for-it.sh
-COPY --chown=nextjs:nodejs entrypoint.sh ./entrypoint.sh
-RUN chmod +x /app/wait-for-it.sh /app/entrypoint.sh
 
 USER nextjs
 
@@ -64,10 +54,6 @@ ENV PORT 3000
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
 
-# Set the entrypoint script
-ENTRYPOINT ["/bin/sh", "/app/entrypoint.sh"]
-
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-# This command is passed to the entrypoint script
-CMD ["node", "server.js"]
+CMD ["node", "server.js"] 
