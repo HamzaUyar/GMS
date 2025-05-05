@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
+import AdvisorInfoCard from '../components/AdvisorInfoCard';
+import StudentsTable from '../components/StudentsTable';
+import Sidebar from '../components/Sidebar';
 
 // Define types for the fetched data (based on Prisma schema + included relations)
 interface Student {
@@ -65,15 +66,6 @@ export default function AdvisorDashboard() {
     getUserData();
   }, [router]);
 
-  // Handle logout
-  const handleLogout = () => {
-    // Clear user data from localStorage
-    localStorage.removeItem('user');
-    localStorage.removeItem('userType');
-    // Redirect to login page
-    router.push('/');
-  };
-
   useEffect(() => {
     if (!advisorId) return; // Wait until we have the advisorId
 
@@ -105,105 +97,23 @@ export default function AdvisorDashboard() {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-60 bg-red-800 text-white flex flex-col p-4 fixed h-full">
-        <div className="flex items-center justify-center mb-10">
-          <Image
-            src="/images/iyte_logo.png"
-            alt="IYTE Logo"
-            width={60}
-            height={60}
-            className="bg-white rounded-full p-1"
-          />
-        </div>
-        <nav className="flex flex-col space-y-2">
-          {/* TODO: Implement actual routing/active states */}
-          <Link href="/dashboard" className="px-3 py-2 rounded hover:bg-red-700">Home</Link>
-          <Link href="#" className="px-3 py-2 rounded hover:bg-red-700">Students list</Link>
-        </nav>
-        
-        {/* Add logout button before the footer */}
-        <div className="mt-auto mb-6">
-          <button 
-            onClick={handleLogout}
-            className="w-full px-3 py-2 bg-red-900 text-white rounded hover:bg-red-950 flex items-center justify-center"
-          >
-            <span>Logout</span>
-          </button>
-        </div>
-        
-        <div className="text-center text-xs">
-          © İzmir Yüksek Teknoloji Enstitüsü
-        </div>
-      </aside>
+      {/* Using the new Sidebar component */}
+      <Sidebar activePage="home" />
 
-      {/* Main Content */}
-      <main className="flex-1 p-8 ml-60"> {/* Add margin-left to offset sidebar width */}
+      {/* Main Content - updated margin to match new sidebar width */}
+      <main className="flex-1 p-8 ml-64">
         <h1 className="text-2xl font-semibold text-gray-800 mb-6">Graduation Management System (Advisor)</h1>
 
         {isLoading && <p>Loading advisor data...</p>}
         {error && <p className="text-red-600">Error: {error}</p>}
 
-        {advisorData && (
-          <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 className="text-xl font-medium text-gray-700 mb-4">Advisor Information</h2>
-             <div className="flex items-center space-x-4">
-                {/* Placeholder for advisor picture */}
-                <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-xl font-semibold text-gray-500">?
-                    {/* <Image src="/path/to/advisor/image.jpg" alt="Advisor" width={64} height={64} className="rounded-full" /> */}
-                </div>
-                <div>
-                    <p className="font-semibold">Advisor name: {advisorData.name}</p>
-                    <p className="text-sm text-gray-600">{advisorData.email}</p>
-                    <p className="text-sm text-gray-600">Department: {advisorData.department.name}</p>
-                 </div>
-             </div>
-          </div>
-        )}
+        {advisorData && <AdvisorInfoCard 
+          name={advisorData.name} 
+          email={advisorData.email} 
+          department={advisorData.department} 
+        />}
 
-        {advisorData && (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-medium text-gray-700 mb-4">Students Graduation Statements</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transcript</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {advisorData.students.length > 0 ? (
-                    advisorData.students.map((student, index) => (
-                      <tr key={student.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.id}</td> {/* Using DB ID */}
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <button className="px-3 py-1 bg-gray-600 text-white text-xs rounded hover:bg-gray-700">Transcript</button>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{"Pending"}</td> {/* Placeholder Status */}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">No students assigned to this advisor.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="mt-6 flex space-x-3">
-                <button className="px-4 py-2 bg-red-700 text-white text-sm rounded hover:bg-red-800">Approve Transcripts</button>
-                <button className="px-4 py-2 bg-red-700 text-white text-sm rounded hover:bg-red-800">Add Outlier Student</button>
-            </div>
-          </div>
-        )}
+        {advisorData && <StudentsTable students={advisorData.students} />}
       </main>
     </div>
   );
