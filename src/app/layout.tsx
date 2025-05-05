@@ -1,10 +1,12 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
-import { AuthProvider } from './context/AuthContext';
+import { Metadata } from 'next';
+import ClientLayout from './client-layout';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
+// Metadata can remain here since this is a server component
+export const metadata: Metadata = {
   title: 'Graduation Management System',
   description: 'IYTE Graduation Management System',
 };
@@ -17,9 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
+        <ClientLayout>
           {children}
-        </AuthProvider>
+        </ClientLayout>
       </body>
     </html>
   );

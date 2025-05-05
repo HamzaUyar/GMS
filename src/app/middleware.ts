@@ -18,39 +18,52 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   
-  // Check if user is authenticated
-  const userDataCookie = request.cookies.get('userData')?.value;
-  const userTypeCookie = request.cookies.get('userType')?.value;
+  // Check if user is authenticated using auth-token cookie
+  const authCookie = request.cookies.get('auth-token')?.value;
   
-  // If no auth data, redirect to login
-  if (!userDataCookie || !userTypeCookie) {
+  // If no auth cookie or invalid cookie, redirect to login
+  if (!authCookie) {
     return NextResponse.redirect(new URL('/', request.url));
   }
   
-  // Check role-based access
-  const userRole = userTypeCookie;
-  const allowedRoutes = roleRoutes[userRole] || [];
-  
-  // Check if the current route starts with any of the allowed routes
-  const hasAccess = allowedRoutes.some(route => 
-    pathname === route || pathname.startsWith(`${route}/`)
-  );
-  
-  if (!hasAccess) {
-    // Redirect to appropriate dashboard based on role
-    switch (userRole) {
-      case 'student':
-        return NextResponse.redirect(new URL('/student-dashboard', request.url));
-      case 'advisor':
-        return NextResponse.redirect(new URL('/dashboard', request.url));
-      case 'admin':
-        return NextResponse.redirect(new URL('/admin-dashboard', request.url));
-      default:
-        return NextResponse.redirect(new URL('/', request.url));
+  try {
+    // Parse auth cookie data
+    const authData = JSON.parse(authCookie);
+    
+    // Check if authenticated
+    if (!authData.isAuthenticated) {
+      return NextResponse.redirect(new URL('/', request.url));
     }
+    
+    // Check role-based access
+    const userRole = authData.userRole;
+    const allowedRoutes = roleRoutes[userRole] || [];
+    
+    // Check if the current route starts with any of the allowed routes
+    const hasAccess = allowedRoutes.some(route => 
+      pathname === route || pathname.startsWith(`${route}/`)
+    );
+    
+    if (!hasAccess) {
+      // Redirect to appropriate dashboard based on role
+      switch (userRole) {
+        case 'student':
+          return NextResponse.redirect(new URL('/student-dashboard', request.url));
+        case 'advisor':
+          return NextResponse.redirect(new URL('/dashboard', request.url));
+        case 'admin':
+          return NextResponse.redirect(new URL('/admin-dashboard', request.url));
+        default:
+          return NextResponse.redirect(new URL('/', request.url));
+      }
+    }
+    
+    return NextResponse.next();
+  } catch (error) {
+    // If there's an error parsing the cookie, redirect to login
+    console.error('Authentication error:', error);
+    return NextResponse.redirect(new URL('/', request.url));
   }
-  
-  return NextResponse.next();
 }
 
 // Configure the middleware to run only on specific paths

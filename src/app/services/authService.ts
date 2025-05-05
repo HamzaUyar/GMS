@@ -1,4 +1,5 @@
 import { AuthResponse, OnboardResponse, User, UserRole } from '../types/user';
+import Cookies from 'js-cookie';
 
 // Authentication service functions
 
@@ -92,19 +93,40 @@ export function getUserRole(): UserRole | null {
 }
 
 /**
- * Store user data in localStorage
+ * Store user data in localStorage and cookies for server-side auth
  */
 export function storeUserData(userData: User, userType: UserRole): void {
+  // Store in localStorage for client-side access
   localStorage.setItem('user', JSON.stringify(userData));
   localStorage.setItem('userType', userType);
+  
+  // Store in cookies for server-side middleware access
+  // Set cookies with path='/' to be accessible across the site
+  // and secure settings for production environments
+  const isProduction = process.env.NODE_ENV === 'production';
+  const cookieOptions = {
+    path: '/',
+    secure: isProduction,
+    sameSite: 'strict' as const,
+    expires: 7, // 7 days
+  };
+  
+  Cookies.set('auth-token', JSON.stringify({
+    isAuthenticated: true,
+    userRole: userType
+  }), cookieOptions);
 }
 
 /**
  * Log out current user
  */
 export function logoutUser(): void {
+  // Clear localStorage
   localStorage.removeItem('user');
   localStorage.removeItem('userType');
+  
+  // Clear cookies
+  Cookies.remove('auth-token', { path: '/' });
 }
 
 /**
