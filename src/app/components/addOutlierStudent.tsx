@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface OutlierStudent {
   id: number;
@@ -19,6 +19,13 @@ export default function AddOutlierStudent({ isOpen, onClose, onAddStudent }: Add
   const [studentId, setStudentId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setStudentId('');
+      setError(null);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -84,7 +91,7 @@ export default function AddOutlierStudent({ isOpen, onClose, onAddStudent }: Add
               id="studentId"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 text-black font-medium"
               placeholder="Örn: 290201072"
               disabled={loading}
             />
