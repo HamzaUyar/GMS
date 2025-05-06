@@ -165,7 +165,7 @@ export default function StudentsTable({ students: initialStudents }: StudentsTab
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {student.studentId || student.id}
+                    {student.id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
