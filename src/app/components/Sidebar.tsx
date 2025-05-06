@@ -56,7 +56,7 @@ export default function Sidebar({ activePage = 'home' }: SidebarProps) {
           </li>
           <li>
             <Link 
-              href="#" 
+              href="/students" 
               className={`flex items-center px-4 py-3 rounded-lg hover:bg-red-700 transition-colors ${
                 activePage === 'students' ? 'bg-red-700 font-medium' : ''
               }`}
@@ -65,19 +65,6 @@ export default function Sidebar({ activePage = 'home' }: SidebarProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
               Students List
-            </Link>
-          </li>
-          <li>
-            <Link 
-              href="#" 
-              className={`flex items-center px-4 py-3 rounded-lg hover:bg-red-700 transition-colors ${
-                activePage === 'reports' ? 'bg-red-700 font-medium' : ''
-              }`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Reports
             </Link>
           </li>
         </ul>

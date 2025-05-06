@@ -204,6 +204,17 @@ const mockData = {
     { "id": 179, "name": "CityPlan Student 9", "email": "student.cityplan9@example.com", "departmentId": 18, "advisorId": 18, "password": "password_student_179" },
     { "id": 180, "name": "CityPlan Student 10", "email": "student.cityplan10@example.com", "departmentId": 18, "advisorId": 18, "password": "password_student_180" }
   ],
+  outlierStudents: [
+    { "id": 181, "name": "Outlier Student 1","studentId": "290201072", "email": "student.outlier1@example.com", "departmentId": 19, "advisorId": 19, "password": "password_student_181" },
+    { "id": 182, "name": "Outlier Student 2", "studentId": "290202082", "email": "student.outlier2@example.com", "departmentId": 19, "advisorId": 19, "password": "password_student_182" },
+    { "id": 183, "name": "Outlier Student 3", "studentId": "280201001", "email": "student.outlier3@example.com", "departmentId": 19, "advisorId": 19, "password": "password_student_183" },
+    { "id": 184, "name": "Outlier Student 4", "studentId": "280201002", "email": "student.outlier4@example.com", "departmentId": 19, "advisorId": 19, "password": "password_student_184" },
+    { "id": 185, "name": "Outlier Student 5", "studentId": "280201003", "email": "student.outlier5@example.com", "departmentId": 19, "advisorId": 19, "password": "password_student_185" },
+    { "id": 186, "name": "Outlier Student 6", "studentId": "280201004", "email": "student.outlier6@example.com", "departmentId": 19, "advisorId": 19, "password": "password_student_186" },
+    { "id": 187, "name": "Outlier Student 7", "studentId": "280201005", "email": "student.outlier7@example.com", "departmentId": 19, "advisorId": 19, "password": "password_student_187" },
+    { "id": 188, "name": "Outlier Student 8", "studentId": "280201006", "email": "student.outlier8@example.com", "departmentId": 19, "advisorId": 19, "password": "password_student_188" },
+    
+  ],
   transcripts: [
     { "id": 1, "creditsCompleted": 210, "compulsoryCoursesCompleted": 45, "ects": 210.5, "studentId": 1 },
     { "id": 2, "creditsCompleted": 225, "compulsoryCoursesCompleted": 48, "ects": 225.0, "studentId": 2 },
